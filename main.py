@@ -1,18 +1,11 @@
 from datetime import datetime
-from task import Task, TaskStatus
+
+from constants import (DATE_INPUT_FORMAT, MSG_EMPTY_TITLE, MSG_EXIT,
+                       MSG_INVALID_CHOICE, MSG_INVALID_DATE,
+                       MSG_INVALID_STATUS, MSG_INVALID_TASK_NUMBER,
+                       MSG_LIST_EMPTY, MSG_NO_OVERDUE, MSG_TASK_ADDED)
 from manager import TaskManager
-from constants import (
-    DATE_INPUT_FORMAT,
-    MSG_EMPTY_TITLE,
-    MSG_INVALID_DATE,
-    MSG_TASK_ADDED,
-    MSG_LIST_EMPTY,
-    MSG_NO_OVERDUE,
-    MSG_INVALID_TASK_NUMBER,
-    MSG_INVALID_STATUS,
-    MSG_EXIT,
-    MSG_INVALID_CHOICE,
-)
+from task import Task, TaskStatus
 
 
 class TaskManagerCLI:

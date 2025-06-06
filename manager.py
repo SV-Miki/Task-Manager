@@ -1,4 +1,5 @@
-from typing import List, Generator, Optional, Iterator
+from typing import Generator, Iterator, List, Optional
+
 from task import Task
 
 
