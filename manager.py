@@ -1,4 +1,4 @@
-from typing import Generator, Iterator, List, Optional
+from typing import Iterator, List, Optional
 
 from task import Task
 
@@ -34,7 +34,7 @@ class TaskManager:
         """Итерирование по задачам."""
         return iter(self._tasks)
 
-    def overdue_tasks(self) -> Generator[Task, None, None]:
+    def overdue_tasks(self) -> Iterator[Task]:
         """Генератор по просроченным задачам."""
         for task in self._tasks:
             if task.is_overdue:
