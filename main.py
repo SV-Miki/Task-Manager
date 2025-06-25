@@ -14,8 +14,7 @@ class TaskManagerCLI:
     def __init__(self):
         self.manager = TaskManager()
 
-    @staticmethod
-    def display_menu() -> None:
+    def _display_menu(self) -> None:
         """Отображает главное меню приложения"""
         print("МЕНЕДЖЕР ЗАДАЧ")
         print("1. Добавить задачу")
@@ -24,7 +23,7 @@ class TaskManagerCLI:
         print("4. Изменить статус задачи")
         print("5. Выход")
 
-    def add_task(self) -> None:
+    def _add_task(self) -> None:
         """Добавляет новую задачу через пользовательский ввод"""
         title = input("Введите название:").strip()
         if not title:
@@ -42,7 +41,7 @@ class TaskManagerCLI:
         self.manager.add_task(task)
         print(MSG_TASK_ADDED.format(title=title))
 
-    def view_tasks(self) -> None:
+    def _view_tasks(self) -> None:
         """Отображает все задачи"""
         if len(self.manager) == 0:
             print(MSG_LIST_EMPTY)
@@ -50,61 +49,62 @@ class TaskManagerCLI:
         for i, task in enumerate(self.manager, 1):
             print(f"{i}. {task}")
 
-    def show_overdue_tasks(self) -> None:
+    def _show_overdue_tasks(self) -> None:
         """Отображает только просроченные задачи"""
-        overdue = list(self.manager.overdue_tasks())
-        if not overdue:
-            print(MSG_NO_OVERDUE)
-            return
         print("Просроченные задачи:")
-        for task in overdue:
+        found_overdue = False
+        for task in self.manager.overdue_tasks():
             print(task)
+            found_overdue = True
+        if not found_overdue:
+            print(MSG_NO_OVERDUE)
 
-    def change_task_status(self) -> None:
+    def _change_task_status(self) -> None:
         """Изменяет статус выбранной задачи"""
         if len(self.manager) == 0:
             print(MSG_LIST_EMPTY)
             return
-        self.view_tasks()
+        self._view_tasks()
         try:
             task_num = int(input("Введите номер задачи для смены статуса: "))
         except ValueError:
             print(MSG_INVALID_TASK_NUMBER)
             return
-        if not (1 <= task_num <= len(self.manager)):
+        task = self.manager.get_task_by_index(task_num - 1)
+        if task is None:
             print(MSG_INVALID_TASK_NUMBER)
             return
-        task = self.manager.get_task_by_index(task_num - 1)
-        statuses = list(TaskStatus)
-        print("Статусы:")
-        for i, status in enumerate(statuses, 1):
+        print("Выберите новый статус:")
+        # Итерируемся напрямую по Enum
+        for i, status in enumerate(TaskStatus, 1):
             print(f"{i}. {status.value}")
         try:
-            status_num = int(input("Выберите новый статус: "))
+            status_num = int(input("Введите номер статуса: "))
         except ValueError:
             print(MSG_INVALID_STATUS)
             return
-        if not (1 <= status_num <= len(statuses)):
+        # len() работает с Enum, а для получения по индексу создаем список "на лету"
+        if not (1 <= status_num <= len(TaskStatus)):
             print(MSG_INVALID_STATUS)
             return
-        if task:
-            task.status = statuses[status_num - 1]
-            print("Статус задачи обновлен.")
+        new_status = list(TaskStatus)[status_num - 1]
+        task.status = new_status
+        print("Статус задачи обновлен.")
 
     def run(self) -> None:
         """Главный цикл приложения"""
         print("Добро пожаловать в Менеджер Задач!")
         while True:
-            self.display_menu()
+            self._display_menu()
             choice = input("Выберите действие: ").strip()
             if choice == "1":
-                self.add_task()
+                self._add_task()
             elif choice == "2":
-                self.view_tasks()
+                self._view_tasks()
             elif choice == "3":
-                self.show_overdue_tasks()
+                self._show_overdue_tasks()
             elif choice == "4":
-                self.change_task_status()
+                self._change_task_status()
             elif choice == "5":
                 print(MSG_EXIT)
                 break

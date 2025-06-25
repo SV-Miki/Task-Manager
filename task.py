@@ -22,30 +22,10 @@ class Task:
         deadline: Optional[datetime] = None,
         status: TaskStatus = TaskStatus.TODO,
     ) -> None:
-        self._title = title
-        self._deadline = deadline
-        self._status = status
+        self.title = title
+        self.deadline = deadline
+        self.status = status
         self._created_at = datetime.now()
-
-    @property
-    def title(self) -> str:
-        """Название задачи."""
-        return self._title
-
-    @property
-    def deadline(self) -> Optional[datetime]:
-        """Дата дедлайна задачи."""
-        return self._deadline
-
-    @property
-    def status(self) -> TaskStatus:
-        """Статус задачи."""
-        return self._status
-
-    @status.setter
-    def status(self, new_status: TaskStatus) -> None:
-        """Меняет статус задачи."""
-        self._status = new_status
 
     @property
     def created_at(self) -> datetime:
@@ -55,18 +35,18 @@ class Task:
     @property
     def is_overdue(self) -> bool:
         """True, если задача просрочена и ещё не выполнена."""
-        if self._deadline is None:
+        if self.deadline is None:
             return False
-        return datetime.now() > self._deadline and self._status != TaskStatus.DONE
+        return datetime.now() > self.deadline and self.status != TaskStatus.DONE
 
     def __str__(self) -> str:
         """Строковое представление задачи для вывода в консоль."""
         deadline_str = (
-            self._deadline.strftime(DATE_DISPLAY_FORMAT)
-            if self._deadline
+            self.deadline.strftime(DATE_DISPLAY_FORMAT)
+            if self.deadline
             else "Без дедлайна"
         )
-        return f"[{self._status.value}] {self._title} — срок до {deadline_str}"
+        return f"[{self.status.value}] {self.title} — срок до {deadline_str}"
 
     def __eq__(self, other: Any) -> bool:
         """Задачи равны, если совпадают название и дата создания."""
